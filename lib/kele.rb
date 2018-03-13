@@ -30,6 +30,28 @@ include Roadmap
     available
   end
 
+  def get_messages(page = nil)
+    if page != nil
+      response = self.class.get(base_api_url("message_threads?page=#{page}"), headers: { authorization: @auth_token })
+    else
+      response = self.class.get(base_api_url("message_threads"), headers: { authorization: @auth_token })
+    end
+    @messages = JSON.parse(response.body)
+  end
+
+  def create_message(sender, recipient_id, token=nil, subject, message)
+    response = self.class.post(base_api_url("messages"),
+    body: {
+      "sender": sender,
+      "recipient_id": recipient_id,
+      "token": token,
+      "subject": subject,
+      "stripped-text": message
+    },
+    headers: { authorization: @auth_token })
+    response
+  end
+
   private
   def base_api_url(endpoint)
     "https://www.bloc.io/api/v1/#{endpoint}"
