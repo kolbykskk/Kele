@@ -52,6 +52,11 @@ include Roadmap
     response
   end
 
+  def get_remaining_checkpoints(chain_id)
+    response = self.class.get(base_api_url("enrollment_chains/#{chain_id}/checkpoints_remaining_in_section"), headers: { authorization: @auth_token })
+    @remaining_checkpoints = JSON.parse(response.body)
+  end
+
   private
   def base_api_url(endpoint)
     "https://www.bloc.io/api/v1/#{endpoint}"
